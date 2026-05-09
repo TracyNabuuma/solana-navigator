@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Code2, Users, Newspaper, Volume2, VolumeX } from "lucide-react";
-import logo from "@/assets/tikvat-logo.png";
 import { LANGUAGES, type LangCode } from "@/data/languages";
 import { solanaKnowledge } from "@/data/solana-knowledge";
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -83,9 +82,6 @@ function Index() {
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Sidebar */}
       <aside className="lg:w-72 lg:min-h-screen border-b lg:border-b-0 lg:border-r border-sidebar-border bg-sidebar/80 backdrop-blur p-5 space-y-6">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="Tikvat" className="h-10 w-auto" />
-        </div>
         <div className="space-y-1">
           <h1 className="text-xl font-bold gradient-text">Solana Assistant</h1>
           <p className="text-xs text-muted-foreground">Build · Learn · Stay updated</p>
