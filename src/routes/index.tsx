@@ -147,7 +147,7 @@ function Index() {
                 </p>
                 <p className="text-xs text-muted-foreground">
                   Answering in <strong className="text-foreground">{LANGUAGES.find((l) => l.code === lang)?.native}</strong>
-                  {voice && apiKey ? " · with voice" : voice ? " · voice needs API key" : " · text only"}
+                  {voice ? " · with voice" : " · text only"}
                 </p>
               </div>
 
@@ -165,7 +165,6 @@ function Index() {
                 loading={loading}
                 voiceEnabled={voice}
                 lang={lang}
-                apiKey={apiKey}
               />
             </>
           )}
