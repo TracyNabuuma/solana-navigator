@@ -7,6 +7,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { QuestionInput } from "@/components/QuestionInput";
 import { AnswerDisplay } from "@/components/AnswerDisplay";
 import { NewsFeed } from "@/components/NewsFeed";
+import { VoiceAgent } from "@/components/VoiceAgent";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -166,7 +167,8 @@ function Index() {
           )}
         </section>
 
-        <aside className="min-w-0 hidden xl:block">
+        <aside className="min-w-0 hidden xl:block space-y-6">
+          <VoiceAgent />
           <NewsFeed />
         </aside>
       </main>
