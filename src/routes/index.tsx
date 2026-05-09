@@ -104,7 +104,9 @@ function Index() {
             {voice ? "Text + Voice" : "Text only"}
           </button>
         </div>
-        <ApiKeyPanel value={apiKey} onChange={setApiKey} />
+        <div className="text-[10px] text-muted-foreground leading-relaxed pt-2 border-t border-sidebar-border">
+          Voice powered by ElevenLabs · multilingual TTS & speech-to-text built in.
+        </div>
       </aside>
 
       {/* Main */}
