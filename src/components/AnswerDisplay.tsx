@@ -9,10 +9,9 @@ interface Props {
   loading: boolean;
   voiceEnabled: boolean;
   lang: LangCode;
-  apiKey: string;
 }
 
-export function AnswerDisplay({ question, answer, loading, voiceEnabled, lang, apiKey }: Props) {
+export function AnswerDisplay({ question, answer, loading, voiceEnabled, lang }: Props) {
   if (loading) {
     return (
       <div className="glass rounded-2xl p-6 flex items-center gap-3 text-muted-foreground">
@@ -30,9 +29,7 @@ export function AnswerDisplay({ question, answer, loading, voiceEnabled, lang, a
         className="prose-answer text-foreground"
         dangerouslySetInnerHTML={{ __html: renderMarkdown(answer) }}
       />
-      {voiceEnabled && (
-        <VoicePlayer text={answer} lang={lang} apiKey={apiKey} />
-      )}
+      {voiceEnabled && <VoicePlayer text={answer} lang={lang} />}
     </div>
   );
 }

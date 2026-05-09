@@ -5,7 +5,6 @@ import logo from "@/assets/tikvat-logo.png";
 import { LANGUAGES, type LangCode } from "@/data/languages";
 import { solanaKnowledge } from "@/data/solana-knowledge";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { ApiKeyPanel } from "@/components/ApiKeyPanel";
 import { QuestionInput } from "@/components/QuestionInput";
 import { AnswerDisplay } from "@/components/AnswerDisplay";
 import { NewsFeed } from "@/components/NewsFeed";
@@ -28,17 +27,14 @@ function Index() {
   const [tab, setTab] = useState<Tab>("consumer");
   const [lang, setLang] = useState<LangCode>("en");
   const [voice, setVoice] = useState(true);
-  const [apiKey, setApiKey] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    setApiKey(localStorage.getItem("eleven_key") || "");
     setLang((localStorage.getItem("lang") as LangCode) || "en");
   }, []);
-  useEffect(() => { if (apiKey) localStorage.setItem("eleven_key", apiKey); }, [apiKey]);
   useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
 
   const suggestions = useMemo(() => {
@@ -105,7 +101,9 @@ function Index() {
             {voice ? "Text + Voice" : "Text only"}
           </button>
         </div>
-        <ApiKeyPanel value={apiKey} onChange={setApiKey} />
+        <div className="text-[10px] text-muted-foreground leading-relaxed pt-2 border-t border-sidebar-border">
+          Voice powered by ElevenLabs · multilingual TTS & speech-to-text built in.
+        </div>
       </aside>
 
       {/* Main */}
@@ -149,7 +147,7 @@ function Index() {
                 </p>
                 <p className="text-xs text-muted-foreground">
                   Answering in <strong className="text-foreground">{LANGUAGES.find((l) => l.code === lang)?.native}</strong>
-                  {voice && apiKey ? " · with voice" : voice ? " · voice needs API key" : " · text only"}
+                  {voice ? " · with voice" : " · text only"}
                 </p>
               </div>
 
@@ -167,7 +165,6 @@ function Index() {
                 loading={loading}
                 voiceEnabled={voice}
                 lang={lang}
-                apiKey={apiKey}
               />
             </>
           )}

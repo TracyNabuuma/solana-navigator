@@ -1,8 +1,11 @@
-// Frontend-only ElevenLabs TTS. Translation is done client-side via the
-// Lovable AI server route; ElevenLabs handles voice synthesis here.
+// Frontend-only ElevenLabs integration. Key is embedded per user request.
+// NOTE: This exposes the key to anyone using the site. Rotate if abused.
+export const ELEVENLABS_API_KEY =
+  "c252835a97400048760577430510f0db1266eec598db9e6e0befc04c3002ed52";
+
 export const ELEVEN_VOICES: Record<string, string> = {
-  en: "EXAVITQu4vr4xnSDxMaL", // Sarah
-  fr: "XrExE9yKIg1WjnnlVkGX", // Matilda (multilingual)
+  en: "EXAVITQu4vr4xnSDxMaL",
+  fr: "XrExE9yKIg1WjnnlVkGX",
   es: "FGY2WhTYpPnrIDTdsKH5",
   sw: "EXAVITQu4vr4xnSDxMaL",
   lg: "EXAVITQu4vr4xnSDxMaL",
@@ -12,9 +15,9 @@ export const ELEVEN_VOICES: Record<string, string> = {
 
 export async function synthesizeSpeech(opts: {
   text: string;
-  apiKey: string;
   voiceId?: string;
   lang?: string;
+  apiKey?: string;
 }): Promise<Blob> {
   const voiceId = opts.voiceId || ELEVEN_VOICES[opts.lang || "en"] || ELEVEN_VOICES.en;
   const res = await fetch(
@@ -22,7 +25,7 @@ export async function synthesizeSpeech(opts: {
     {
       method: "POST",
       headers: {
-        "xi-api-key": opts.apiKey,
+        "xi-api-key": opts.apiKey || ELEVENLABS_API_KEY,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -36,4 +39,22 @@ export async function synthesizeSpeech(opts: {
     throw new Error(`ElevenLabs ${res.status}: ${await res.text().catch(() => "")}`);
   }
   return res.blob();
+}
+
+// Batch speech-to-text using scribe_v2.
+export async function transcribeAudio(audio: Blob, languageCode?: string): Promise<string> {
+  const fd = new FormData();
+  fd.append("file", audio, "question.webm");
+  fd.append("model_id", "scribe_v2");
+  if (languageCode) fd.append("language_code", languageCode);
+  const res = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
+    method: "POST",
+    headers: { "xi-api-key": ELEVENLABS_API_KEY },
+    body: fd,
+  });
+  if (!res.ok) {
+    throw new Error(`STT ${res.status}: ${await res.text().catch(() => "")}`);
+  }
+  const data = (await res.json()) as { text?: string };
+  return data.text || "";
 }
