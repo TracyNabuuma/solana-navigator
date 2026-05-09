@@ -3,9 +3,9 @@ import { Play, Pause, Loader2, Volume2, AlertCircle } from "lucide-react";
 import { synthesizeSpeech } from "@/lib/elevenlabs";
 import type { LangCode } from "@/data/languages";
 
-interface Props { text: string; lang: LangCode; apiKey: string; }
+interface Props { text: string; lang: LangCode; }
 
-export function VoicePlayer({ text, lang, apiKey }: Props) {
+export function VoicePlayer({ text, lang }: Props) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,15 +18,10 @@ export function VoicePlayer({ text, lang, apiKey }: Props) {
       else { audio.play(); setPlaying(true); }
       return;
     }
-    if (!apiKey) {
-      setError("Add your ElevenLabs API key in the sidebar to enable voice.");
-      return;
-    }
     setLoading(true);
     try {
-      // Strip markdown for cleaner speech
       const speakable = text.replace(/```[\s\S]*?```/g, "").replace(/[`*#_>]/g, "");
-      const blob = await synthesizeSpeech({ text: speakable, apiKey, lang });
+      const blob = await synthesizeSpeech({ text: speakable, lang });
       const url = URL.createObjectURL(blob);
       const a = new Audio(url);
       a.onended = () => setPlaying(false);
