@@ -27,17 +27,14 @@ function Index() {
   const [tab, setTab] = useState<Tab>("consumer");
   const [lang, setLang] = useState<LangCode>("en");
   const [voice, setVoice] = useState(true);
-  const [apiKey, setApiKey] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    setApiKey(localStorage.getItem("eleven_key") || "");
     setLang((localStorage.getItem("lang") as LangCode) || "en");
   }, []);
-  useEffect(() => { if (apiKey) localStorage.setItem("eleven_key", apiKey); }, [apiKey]);
   useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
 
   const suggestions = useMemo(() => {
