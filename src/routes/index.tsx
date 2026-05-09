@@ -5,7 +5,6 @@ import logo from "@/assets/tikvat-logo.png";
 import { LANGUAGES, type LangCode } from "@/data/languages";
 import { solanaKnowledge } from "@/data/solana-knowledge";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { ApiKeyPanel } from "@/components/ApiKeyPanel";
 import { QuestionInput } from "@/components/QuestionInput";
 import { AnswerDisplay } from "@/components/AnswerDisplay";
 import { NewsFeed } from "@/components/NewsFeed";
