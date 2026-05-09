@@ -1,7 +1,7 @@
 // Frontend-only ElevenLabs integration. Key is embedded per user request.
 // NOTE: This exposes the key to anyone using the site. Rotate if abused.
 export const ELEVENLABS_API_KEY =
-  "c252835a97400048760577430510f0db1266eec598db9e6e0befc04c3002ed52";
+  "sk_f33a6d7a4370b18ef28b1a5ba1dfcbb4d02dc91857a7977b";
 
 export const ELEVEN_VOICES: Record<string, string> = {
   en: "EXAVITQu4vr4xnSDxMaL",
