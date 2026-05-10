@@ -50,7 +50,6 @@ export default function App() {
           <h1 className="text-xl font-bold gradient-text">Solana Assistant</h1>
           <p className="text-xs text-muted-foreground">Build · Learn · Stay updated</p>
         </div>
-        <LanguageSelector value={lang} onChange={setLang} />
         <div className="space-y-2">
           <div className="text-xs uppercase tracking-widest text-muted-foreground">Output</div>
           <button
@@ -89,42 +88,48 @@ export default function App() {
           {tab === "news" ? (
             <NewsFeed />
           ) : (
-            <>
-              <div className="space-y-2">
-                <h2 className="text-3xl sm:text-4xl font-bold leading-tight">
-                  {tab === "developer" ? (
-                    <>Ship on <span className="gradient-text">Solana</span> faster.</>
-                  ) : (
-                    <>Your <span className="gradient-text">Solana</span> guide, in your language.</>
-                  )}
-                </h2>
-                <p className="text-muted-foreground">
-                  {tab === "developer"
-                    ? "Code snippets, Anchor patterns, and program design — answered with context."
-                    : "Wallets, staking, payments, and NFTs — explained simply, narrated aloud."}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Answering in <strong className="text-foreground">{LANGUAGES.find((l) => l.code === lang)?.native}</strong>
-                  {voice ? " · with voice" : " · text only"}
-                </p>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-6">
+              <div className="space-y-6 min-w-0">
+                <div className="space-y-2">
+                  <h2 className="text-3xl sm:text-4xl font-bold leading-tight">
+                    {tab === "developer" ? (
+                      <>Ship on <span className="gradient-text">Solana</span> faster.</>
+                    ) : (
+                      <>Your <span className="gradient-text">Solana</span> guide, in your language.</>
+                    )}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {tab === "developer"
+                      ? "Code snippets, Anchor patterns, and program design — answered with context."
+                      : "Wallets, staking, payments, and NFTs — explained simply, narrated aloud."}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Answering in <strong className="text-foreground">{LANGUAGES.find((l) => l.code === lang)?.native}</strong>
+                    {voice ? " · with voice" : " · text only"}
+                  </p>
+                </div>
+
+                <QuestionInput onAsk={ask} loading={loading} suggestions={suggestions} />
+
+                {err && (
+                  <div className="rounded-xl border border-destructive/40 bg-destructive/10 text-destructive p-4 text-sm">
+                    {err}
+                  </div>
+                )}
+
+                <AnswerDisplay
+                  question={question}
+                  answer={answer}
+                  loading={loading}
+                  voiceEnabled={voice}
+                  lang={lang}
+                />
               </div>
 
-              <QuestionInput onAsk={ask} loading={loading} suggestions={suggestions} />
-
-              {err && (
-                <div className="rounded-xl border border-destructive/40 bg-destructive/10 text-destructive p-4 text-sm">
-                  {err}
-                </div>
-              )}
-
-              <AnswerDisplay
-                question={question}
-                answer={answer}
-                loading={loading}
-                voiceEnabled={voice}
-                lang={lang}
-              />
-            </>
+              <aside className="glass rounded-2xl p-4 h-fit md:sticky md:top-4">
+                <LanguageSelector value={lang} onChange={setLang} />
+              </aside>
+            </div>
           )}
         </section>
 
