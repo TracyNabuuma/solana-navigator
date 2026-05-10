@@ -50,16 +50,6 @@ export default function App() {
           <h1 className="text-xl font-bold gradient-text">Solana Assistant</h1>
           <p className="text-xs text-muted-foreground">Build · Learn · Stay updated</p>
         </div>
-        <div className="space-y-2">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">Output</div>
-          <button
-            onClick={() => setVoice((v) => !v)}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-sidebar-accent text-sm hover:bg-sidebar-accent/70 transition"
-          >
-            {voice ? <Volume2 className="size-4 text-accent" /> : <VolumeX className="size-4" />}
-            {voice ? "Text + Voice" : "Text only"}
-          </button>
-        </div>
         <div className="text-[10px] text-muted-foreground leading-relaxed pt-2 border-t border-sidebar-border">
           Voice powered by ElevenLabs · multilingual TTS & speech-to-text built in.
         </div>
@@ -88,7 +78,23 @@ export default function App() {
           {tab === "news" ? (
             <NewsFeed />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6">
+              <aside className="space-y-4 h-fit md:sticky md:top-4">
+                <div className="glass rounded-2xl p-4">
+                  <LanguageSelector value={lang} onChange={setLang} />
+                </div>
+                <div className="glass rounded-2xl p-4 space-y-2">
+                  <div className="text-xs uppercase tracking-widest text-muted-foreground">Output</div>
+                  <button
+                    onClick={() => setVoice((v) => !v)}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-sidebar-accent text-sm hover:bg-sidebar-accent/70 transition"
+                  >
+                    {voice ? <Volume2 className="size-4 text-accent" /> : <VolumeX className="size-4" />}
+                    {voice ? "Text + Voice" : "Text only"}
+                  </button>
+                </div>
+              </aside>
+
               <div className="space-y-6 min-w-0">
                 <div className="space-y-2">
                   <h2 className="text-3xl sm:text-4xl font-bold leading-tight">
@@ -125,10 +131,6 @@ export default function App() {
                   lang={lang}
                 />
               </div>
-
-              <aside className="glass rounded-2xl p-4 h-fit md:sticky md:top-4">
-                <LanguageSelector value={lang} onChange={setLang} />
-              </aside>
             </div>
           )}
         </section>
