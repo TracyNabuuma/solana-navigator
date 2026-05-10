@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Code2, Users, Newspaper, Volume2, VolumeX } from "lucide-react";
 import { LANGUAGES, type LangCode } from "@/data/languages";
@@ -7,22 +6,11 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { QuestionInput } from "@/components/QuestionInput";
 import { AnswerDisplay } from "@/components/AnswerDisplay";
 import { NewsFeed } from "@/components/NewsFeed";
-
-export const Route = createFileRoute("/")({
-  component: Index,
-  head: () => ({
-    meta: [
-      { title: "Tikvat — Solana Ecosystem Assistant" },
-      { name: "description", content: "Ask anything about Solana — for builders and everyday users — in your language, with voice. Powered by AI and ElevenLabs." },
-      { property: "og:title", content: "Tikvat — Solana Ecosystem Assistant" },
-      { property: "og:description", content: "Multilingual Solana Q&A, code snippets, and live news. Voice narration in Luganda, Swahili, French and more." },
-    ],
-  }),
-});
+import { answerLocally, translate } from "@/lib/ask";
 
 type Tab = "developer" | "consumer" | "news";
 
-function Index() {
+export default function App() {
   const [tab, setTab] = useState<Tab>("consumer");
   const [lang, setLang] = useState<LangCode>("en");
   const [voice, setVoice] = useState(true);
@@ -45,31 +33,8 @@ function Index() {
   const ask = async (q: string) => {
     setQuestion(q); setAnswer(""); setErr(null); setLoading(true);
     try {
-      const pool = tab === "developer" ? solanaKnowledge.developer : solanaKnowledge.consumer;
-      const context = pool
-        .filter((p) => q.toLowerCase().split(/\W+/).some((w) => w.length > 3 && p.q.toLowerCase().includes(w)))
-        .map((p) => `Q: ${p.q}\nA: ${p.a}`).join("\n\n");
-
-      const res = await fetch("/api/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q, mode: tab === "developer" ? "developer" : "consumer", context }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const { answer: english } = await res.json();
-
-      let final = english;
-      if (lang !== "en") {
-        const tr = await fetch("/api/translate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: english, targetLang: lang }),
-        });
-        if (tr.ok) {
-          const j = await tr.json();
-          final = j.text;
-        }
-      }
+      const english = answerLocally(q, tab === "developer" ? "developer" : "consumer");
+      const final = lang === "en" ? english : await translate(english, lang);
       setAnswer(final);
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : "Something went wrong.");
@@ -80,7 +45,6 @@ function Index() {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Sidebar */}
       <aside className="lg:w-72 lg:min-h-screen border-b lg:border-b-0 lg:border-r border-sidebar-border bg-sidebar/80 backdrop-blur p-5 space-y-6">
         <div className="space-y-1">
           <h1 className="text-xl font-bold gradient-text">Solana Assistant</h1>
@@ -102,10 +66,8 @@ function Index() {
         </div>
       </aside>
 
-      {/* Main */}
       <main className="flex-1 p-4 sm:p-8 grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-6 max-w-[1600px] mx-auto w-full">
         <section className="space-y-6 min-w-0">
-          {/* Tabs */}
           <div className="glass rounded-xl p-1 inline-flex gap-1">
             {([
               { id: "consumer", label: "For Users", icon: Users },
